@@ -1,0 +1,51 @@
+# Python-generated files
+__pycache__/
+*.py[oc]
+build/
+dist/
+wheels/
+*.egg-info
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+.mypy_cache/
+.dmypy.json
+dmypy.json
+.ruff_cache/
+
+# Cache directories
+*_cache/
+**/*_cache/
+
+# Virtual environments
+.venv
+venv/
+env/
+ENV/
+
+# IDE/Editor
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.project
+.pydevproject
+
+# OS-specific
+.DS_Store
+Thumbs.db
+.directory
+
+# Environment variables
+.env
+.env.*
+
+# Logs
+*.log
+logs/
+
+# Local development
+.claude/*
+!.claude/settings.json
