@@ -1,7 +1,7 @@
 """
 python_dev_core.utils.logging
 ==========
-* ルートロガー初期化と自動計装を行う。
+* Initialize root logger and perform automatic instrumentation.
 """
 
 from __future__ import annotations
@@ -9,7 +9,7 @@ from __future__ import annotations
 from ._auto_logger import AutoLogMeta, instrument
 from ._logconfig import configure_root_logger
 
-# ルートロガー設定
+# Configure root logger
 configure_root_logger()
 
 __all__ = [

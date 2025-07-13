@@ -1,5 +1,5 @@
-"""pytest設定ファイル"""
+"""pytest configuration file"""
 
 from __future__ import annotations
 
-# testsがsrcディレクトリ内にあるため、パス設定は不要
+# Path configuration is not required since tests are inside the src directory

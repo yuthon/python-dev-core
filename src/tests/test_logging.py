@@ -1,4 +1,4 @@
-"""ロギング機能のテスト"""
+"""Tests for logging functionality"""
 
 from __future__ import annotations
 
@@ -15,10 +15,10 @@ from python_dev_core.utils.logging._logconfig import (
 
 
 class TestAutoLogging:
-    """自動ロギング機能のテスト"""
+    """Tests for automatic logging functionality"""
 
     def test_auto_log_meta_class(self, caplog: pytest.LogCaptureFixture) -> None:
-        """AutoLogMetaメタクラスのテスト"""
+        """Test for AutoLogMeta metaclass"""
         caplog.set_level(logging.DEBUG)
 
         class TestClass(metaclass=AutoLogMeta):
@@ -34,7 +34,7 @@ class TestAutoLogging:
         assert "test_method ⇠" in caplog.records[1].message
 
     def test_instrument_function(self, caplog: pytest.LogCaptureFixture) -> None:
-        """instrument関数のテスト"""
+        """Test for instrument function"""
         caplog.set_level(logging.DEBUG)
 
         def simple_function(a: int, b: int) -> int:
@@ -51,7 +51,7 @@ class TestAutoLogging:
     def test_private_methods_not_instrumented(
         self, caplog: pytest.LogCaptureFixture
     ) -> None:
-        """プライベートメソッドが計装されないことのテスト"""
+        """Test that private methods are not instrumented"""
         caplog.set_level(logging.DEBUG)
 
         class TestClass(metaclass=AutoLogMeta):
@@ -65,16 +65,16 @@ class TestAutoLogging:
         result = obj.public_method()
 
         assert result == "private"
-        # public_methodのログのみが記録される
+        # Only public_method logs should be recorded
         logged_methods = [r.message for r in caplog.records if "⇢" in r.message]
         assert len(logged_methods) == 1
         assert "public_method" in logged_methods[0]
-        # プライベートメソッドのログが含まれていないことを確認
+        # Verify private method logs are not included
         all_messages = " ".join(r.message for r in caplog.records)
         assert "_private_method ⇢" not in all_messages
 
     def test_exception_handling(self, caplog: pytest.LogCaptureFixture) -> None:
-        """例外発生時のログ出力テスト"""
+        """Test log output when exception occurs"""
         caplog.set_level(logging.DEBUG)
 
         class TestClass(metaclass=AutoLogMeta):
@@ -85,11 +85,11 @@ class TestAutoLogging:
         with pytest.raises(ValueError):
             obj.failing_method()
 
-        # 例外発生時のログが記録される
+        # Exception logs should be recorded
         assert any("!! raised" in r.message for r in caplog.records)
 
     def test_log_level_filtering(self, caplog: pytest.LogCaptureFixture) -> None:
-        """ログレベルによるフィルタリングのテスト"""
+        """Test filtering by log level"""
         caplog.set_level(logging.INFO)
 
         class TestClass(metaclass=AutoLogMeta):
@@ -100,31 +100,31 @@ class TestAutoLogging:
         result = obj.test_method()
 
         assert result == "result"
-        # DEBUGレベルのログは記録されない
+        # DEBUG level logs should not be recorded
         assert len(caplog.records) == 0
 
 
 class TestLogConfig:
-    """ログ設定のテスト"""
+    """Tests for log configuration"""
 
     def test_log_level_from_env(self) -> None:
-        """環境変数からログレベルを取得するテスト"""
+        """Test getting log level from environment variable"""
 
         with patch.dict("os.environ", {"LOG_LEVEL": "WARNING"}):
             level = _resolve_level()
             assert level == logging.WARNING
 
     def test_default_log_level(self) -> None:
-        """デフォルトログレベルのテスト"""
+        """Test default log level"""
 
         with patch.dict("os.environ", {"LOG_LEVEL": ""}):
             level = _resolve_level()
             assert level == logging.INFO
 
     def test_configure_root_logger(self) -> None:
-        """ルートロガー設定のテスト"""
+        """Test root logger configuration"""
 
-        # 既存のハンドラをクリア
+        # Clear existing handlers
         root = logging.getLogger()
         root.handlers.clear()
 
@@ -134,6 +134,6 @@ class TestLogConfig:
         assert isinstance(root.handlers[0], logging.StreamHandler)
         assert root.level == logging.INFO
 
-        # 再度呼び出してもハンドラが重複しないことを確認
+        # Verify handlers are not duplicated when called again
         configure_root_logger()
         assert len(root.handlers) == 1

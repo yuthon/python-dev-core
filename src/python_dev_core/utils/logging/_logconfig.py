@@ -1,7 +1,7 @@
 """
 python_dev_core.utils.logging._logconfig
 --------------------
-パッケージ全体で共通利用する logging 設定。
+Logging configuration shared across the entire package.
 """
 
 from __future__ import annotations
@@ -16,20 +16,21 @@ _ENV_VAR: Final[str] = "LOG_LEVEL"
 
 
 def _resolve_level() -> int:
-    """環境変数からログレベルを取得（未設定なら INFO）。"""
+    """Get log level from environment variable (defaults to INFO if not set)."""
     text = os.getenv(_ENV_VAR, "").upper()
     return getattr(logging, text, _DEFAULT_LEVEL)
 
 
 def configure_root_logger() -> None:
     """
-    ルートロガーを設定。
+    Configure the root logger.
 
-    ★ パッケージ import 時に必ず呼び出される（mypkg_core/__init__.py で実行）。
+    ★ Always called when the package is imported (executed in mypkg_core/__init__.py).
     """
     level = _resolve_level()
 
-    # 既にハンドラが付いている場合はユーザが手動設定したとみなし、何もしない。
+    # If handlers are already attached, assume user has configured manually
+    # and do nothing.
     root = logging.getLogger()
     if root.handlers:
         return

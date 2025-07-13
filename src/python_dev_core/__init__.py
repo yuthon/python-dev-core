@@ -2,12 +2,12 @@
 python_dev_core
 ===============
 
-Python開発のためのコアユーティリティパッケージ。
+Core utility package for Python development.
 
-主な機能:
-- 自動ロギング機能
-- 汎用ヘルパー関数
-- 開発支援ツール
+Main features:
+- Automatic logging functionality
+- General-purpose helper functions
+- Development support tools
 """
 
 from __future__ import annotations
@@ -16,7 +16,7 @@ __version__ = "0.1.0"
 __author__ = "Hashimoto"
 __license__ = "MIT"
 
-# ロギング機能のエクスポート
+# Export logging functionality
 from python_dev_core.utils.logging import AutoLogMeta, instrument
 
 __all__ = [

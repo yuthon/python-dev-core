@@ -1,27 +1,27 @@
 # python-dev-core
 
-Python開発のためのコアユーティリティパッケージ
+Core utility package for Python development
 
-## 概要
+## Overview
 
-`python-dev-core`はPython開発における共通的な機能を提供するコアパッケージです。自動ロギング機能やユーティリティ関数など、開発効率を向上させるツールを提供します。
+`python-dev-core` is a core package that provides common functionality for Python development. It offers tools to improve development efficiency such as automatic logging capabilities and utility functions.
 
-## 特徴
+## Features
 
-- **自動ロギング**: メタクラスとデコレータによる自動ログ計装
-- **開発効率化**: 汎用的なヘルパー関数とユーティリティ
-- **型安全**: Python 3.13以降の最新型ヒント機能を活用
-- **高品質コード**: 厳格なlintとテストによる品質保証
+- **Automatic Logging**: Automatic log instrumentation using metaclasses and decorators
+- **Development Efficiency**: General-purpose helper functions and utilities
+- **Type Safety**: Utilizing the latest type hint features from Python 3.13 onwards
+- **High-Quality Code**: Quality assurance through strict linting and testing
 
-## インストール
+## Installation
 
-### pipでのインストール
+### Installing with pip
 
 ```bash
 pip install python-dev-core
 ```
 
-### 開発環境のセットアップ
+### Development Environment Setup
 
 ```bash
 git clone https://github.com/yourusername/python-dev-core.git
@@ -29,111 +29,111 @@ cd python-dev-core
 uv sync
 ```
 
-## 使用方法
+## Usage
 
-### 自動ロギング
+### Automatic Logging
 
-#### クラスの自動計装
+#### Automatic Class Instrumentation
 
 ```python
 from python_dev_core import AutoLogMeta
 
 class MyService(metaclass=AutoLogMeta):
     def process_data(self, data: list[str]) -> dict[str, int]:
-        # メソッドの開始/終了が自動的にログ出力される
+        # Method start/end is automatically logged
         result = {}
         for item in data:
             result[item] = len(item)
         return result
 
-# 使用例
+# Usage example
 service = MyService()
 service.process_data(["hello", "world"])
 # DEBUG: MyService.process_data called with args=(['hello', 'world'],), kwargs={}
 # DEBUG: MyService.process_data returned {'hello': 5, 'world': 5} (0.0001 s)
 ```
 
-#### モジュール/関数の自動計装
+#### Module/Function Automatic Instrumentation
 
 ```python
 from python_dev_core import instrument
 import my_module
 
-# モジュール全体を計装
+# Instrument the entire module
 instrument(my_module)
 
-# 個別の関数を計装
+# Instrument individual functions
 @instrument
 def calculate_sum(numbers: list[int]) -> int:
     return sum(numbers)
 ```
 
-### ログレベルの制御
+### Controlling Log Level
 
-環境変数`LOG_LEVEL`でログレベルを制御できます。
+You can control the log level using the `LOG_LEVEL` environment variable.
 
 ```bash
 export LOG_LEVEL=DEBUG  # DEBUG, INFO, WARNING, ERROR, CRITICAL
 python your_script.py
 ```
 
-## 開発
+## Development
 
-### 必要環境
+### Requirements
 
-- Python 3.13以上
-- uv (パッケージマネージャー)
+- Python 3.13 or higher
+- uv (package manager)
 
-### 開発コマンド
+### Development Commands
 
 ```bash
-# コードフォーマット
+# Code formatting
 make format
 
-# リント
+# Linting
 make lint
 
-# 型チェック
+# Type checking
 make typecheck
 
-# テスト実行
+# Run tests
 make test
 
-# すべてのチェック実行
+# Run all checks
 make check
 ```
 
-## プロジェクト構造
+## Project Structure
 
 ```
 python-dev-core/
 ├── src/
 │   └── python_dev_core/
 │       ├── __init__.py
-│       ├── core/           # コアロジック
-│       └── utils/          # ユーティリティ
+│       ├── core/           # Core logic
+│       └── utils/          # Utilities
 │           ├── __init__.py
 │           ├── helpers.py
-│           └── logging/    # ロギング機能
-├── tests/                  # テストコード
-├── pyproject.toml         # プロジェクト設定
-├── Makefile              # 開発タスク
-└── README.md             # このファイル
+│           └── logging/    # Logging functionality
+├── tests/                  # Test code
+├── pyproject.toml         # Project configuration
+├── Makefile              # Development tasks
+└── README.md             # This file
 ```
 
-## ライセンス
+## License
 
 MIT License
 
-## 作者
+## Author
 
 Hashimoto
 
-## 貢献
+## Contributing
 
-バグ報告や機能要望は、GitHubのissueにて受け付けています。
+Bug reports and feature requests are accepted via GitHub issues.
 
-プルリクエストを送る際は：
-- `make format`,`make lint`,`make typecheck`を実行してすべてのチェックが通ることを確認
-- 新機能にはテストを追加
-- ドキュメントを更新
+When submitting a pull request:
+- Run `make format`, `make lint`, `make typecheck` and ensure all checks pass
+- Add tests for new features
+- Update documentation

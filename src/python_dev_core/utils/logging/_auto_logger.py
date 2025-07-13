@@ -1,7 +1,7 @@
 """
 python_dev_core.utils.logging._auto_logger
 ----------------------
-関数・メソッドの開始／終了を DEBUG ログするデコレータとメタクラス。
+Decorator and metaclass for DEBUG logging of function/method start and end.
 """
 
 from __future__ import annotations
@@ -17,15 +17,15 @@ from typing import Any, cast
 
 def _log_call[F: Callable[..., Any]](fn: F) -> F:
     """
-    単一の関数 / メソッドを計装するデコレータ。
+    Decorator to instrument a single function/method.
 
-    * 呼び出し時：
+    * On call:
         DEBUG "[func] ⇢ args=%s, kwargs=%s"
-    * 正常終了：
+    * On normal exit:
         DEBUG "[func] ⇠ return=%s (%.4f s)"
-    * 例外発生：
+    * On exception:
         DEBUG "[func] !! raised"
-        → 例外はそのまま伝播
+        → Exception propagates as-is
     """
     logger = logging.getLogger(fn.__module__)
 
@@ -50,15 +50,15 @@ def _log_call[F: Callable[..., Any]](fn: F) -> F:
 
 
 def _should_wrap(obj: Any) -> bool:
-    """wrap 対象か？"""
+    """Should this object be wrapped?"""
     return isinstance(obj, FunctionType) and not obj.__name__.startswith("_")
 
 
 def instrument(obj: Any) -> Any:
     """
-    * モジュール、関数、クラスのいずれかを受け取り、
-      非 private 要素を再帰的に _log_call で包む
-    * 重複包み込み防止のため「__instrumented__」属性でマーク
+    * Takes a module, function, or class and recursively wraps
+      non-private elements with _log_call
+    * Marks with "__instrumented__" attribute to prevent duplicate wrapping
     """
     if getattr(obj, "__instrumented__", False):
         return obj
@@ -75,10 +75,10 @@ def instrument(obj: Any) -> Any:
             if _should_wrap(member):
                 setattr(obj, name, _log_call(member))
 
-        # 動的属性アクセスも対象にしたい場合、
-        # __getattribute__ を差し替えるなど追加実装可。
+        # To instrument dynamic attribute access,
+        # additional implementation like replacing __getattribute__ is possible.
 
-    elif callable(obj):  # 関数
+    elif callable(obj):  # function
         obj = _log_call(obj)
 
     obj.__instrumented__ = True
@@ -87,10 +87,10 @@ def instrument(obj: Any) -> Any:
 
 class AutoLogMeta(type):
     """
-    自動計装付きメタクラス。
+    Metaclass with automatic instrumentation.
 
-    `class Foo(metaclass=AutoLogMeta): ...` と宣言すると
-    public メソッドは全て計装される。
+    When declaring `class Foo(metaclass=AutoLogMeta): ...`,
+    all public methods are instrumented.
     """
 
     def __new__(
